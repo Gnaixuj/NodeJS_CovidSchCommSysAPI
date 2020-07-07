@@ -1,32 +1,9 @@
 const Teacher = require('../models/teacher');
 const Student = require('../models/student');
+const Suspend = require('../models/suspend');
 const db = require('../db');
 
 // REGISTER 1 OR MORE STUDENTS TO A SPECIFIED TEACHER
-// const register = (req, res) => {
-//     const teacher = new Teacher(req.body);
-//     Teacher.findOne({teacher: req.body.teacher})
-//         .then((data) => {
-//             if (!data) {
-//                 teacher.save()
-//             }
-//             else {
-//                 req.body.students.forEach(element => {
-//                     data.students.push(element);
-//                 });
-//                 data.students = [...new Set(data.students)];
-//                 data.save()
-//             }
-//         })
-//         .then(() => {
-//             res.status(204).send('Success');
-//         })
-//         .catch((err) => {
-//             console.log(err);
-//             res.status(400).send('Error');
-//         })
-// };
-
 const register = async (req, res) => {
     const teacher = new Teacher(req.body);
     try {
@@ -48,6 +25,7 @@ const register = async (req, res) => {
     }
 }
 
+// RETRIEVE A LIST OF STUDENTS COMMON TO A GIVEN LIST OF TEACHERS
 const commonstudents = async (req, res) => {
     var teachers;
     if (typeof req.query.teacher == 'object') {
@@ -82,4 +60,24 @@ const commonstudents = async (req, res) => {
     }
 }
 
-module.exports = { register, commonstudents };
+// SUSPEND A SPECIFIED STUDENT
+const suspend = async (req, res) => {
+    try {
+        if (req.body.student.length < 1) {
+            throw new Error('No Student Email is Entered');
+        }
+        const suspend = new Suspend(req.body);
+        const data = await Suspend.findOne(req.body);
+        if (data) {
+            throw new Error(`${req.body.student} Already Suspended`);
+        }
+        await suspend.save();
+        res.status(200);
+        res.send('Success');
+    } catch (err) {
+        res.status(400);
+        res.send(err.message);
+    }
+}
+
+module.exports = { register, commonstudents, suspend };
