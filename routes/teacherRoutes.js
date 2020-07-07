@@ -10,7 +10,7 @@ router.use(morgan('dev'));
 
 router.post('/register', teacherController.register);
 
-// router.get('/commonstudents', teacherController.commonstudents);
+router.get('/commonstudents', teacherController.commonstudents);
 
 // router.post('/suspend', teacherController.suspend);
 
