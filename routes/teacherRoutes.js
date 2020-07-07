@@ -14,7 +14,7 @@ router.get('/commonstudents', teacherController.commonstudents);
 
 router.post('/suspend', teacherController.suspend);
 
-// router.post('/retrievefornotifications', teacherController.retrievefornotifications);
+router.post('/retrievefornotifications', teacherController.retrievefornotifications);
 
 module.exports = router;
 
